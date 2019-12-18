@@ -1,20 +1,114 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<h3 class="bg-primary p-1 text-white">Lista de {{ getName() }}</h3>
 
+
+<div class="countainer">
+  <div class="my-1">
+    <input class="form-control" placeholder=" Quais as suas  Tarefas?" #todoText />
+    <br>
+
+    <div class="campoAtributo">Prioridade
+      <select name="prioridade" #todoPrioridade>
+        <option value="Alta">Alta</option>
+        <option value="Média">Média</option>
+        <option value="Baixa">Baixa</option>
+      </select>
+    </div>
+    <br>
+
+    <div class="campoAtributo">Data de Realização
+      <input type="date" #todoDataRealizacao>
+      <br>Data de Hoje: {{this.model.dataHoje()}}
+    </div>
+
+    <br>
+    <br>
+    <button class="btn btn-primary mt-1 btn-lg btn-block"
+      (click)="addItem(todoText.value, todoPrioridade.value, todoDataRealizacao.value)">
+     Adicionar Tarefa
+    </button>
+  </div>
+
+  <br>
+  <br>
+
+  <br><br>
+  
+<table class= "table table-bordered">
+    <thead>   
+        <tr>
+            <th></th>
+            <th>Para fazer</th>
+            <th>Prioridade</th>
+            <th>Data Limite</th>
+            <th>Fez?</th>
+            <th>Feito?</th>
+            <th>Remover</th>
+          </tr>
+        </thead>>
+        <tbody *ngFor="let item of getTodoItens(); let i = index">
+          <tr *ngIf="item.prioridade=='Alta'" class="btn-danger ">
+            <td>{{ i + 1 }}</td>
+            <td>{{ item.action }}</td>
+            <td>{{ item.prioridade }}</td>
+            <td>{{ item.dataRealizacao }}</td>
+            <td><input type="checkbox" [(ngModel)]="item.done" /></td>
+            <td [ngSwitch]="item.done">
+              <span *ngSwitchCase="true">Sim</span>
+              <span *ngSwitchDefault>Não</span>
+            </td>
+            <td *ngIf="item.prioridade=='Alta'">
+              <button class="btn btn-light" (click)= "removerItem(item.action)">X</button>
+            </td>
+          </tr>
+
+          <tr *ngIf="item.prioridade=='Média'" class="btn-warning">
+              <td>{{ i + 1 }}</td>
+              <td>{{ item.action }}</td>
+              <td>{{ item.prioridade }}</td>
+              <td>{{ item.dataRealizacao }}</td>
+              <td><input type="checkbox" [(ngModel)]="item.done" /></td>
+              <td [ngSwitch]="item.done">
+                <span *ngSwitchCase="true">Sim</span>
+                <span *ngSwitchDefault>Não</span>
+              </td>
+              <td >
+                <button class="btn btn-light" (click)= "removerItem(item.action)">X</button>
+              </td >
+          </tr>
+          <tr *ngIf="item.prioridade=='Baixa'" class="btn-success">
+              <td>{{ i + 1 }}</td>
+              <td>{{ item.action }}</td>
+              <td>{{ item.prioridade }}</td>
+              <td>{{ item.dataRealizacao }}</td>
+              <td><input type="checkbox" [(ngModel)]="item.done" /></td>
+              <td [ngSwitch]="item.done">
+                <span *ngSwitchCase="true">Sim</span>
+                <span *ngSwitchDefault>Não</span>
+              </td>
+              <td>
+                <button class="btn btn-light" (click)= "removerItem(item.action)">X</button>
+              </td>
+          </tr>
+        </tbody>
+
+      </table>
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th>Realizadas</th>
+            <th>Feitas?</th>
+          </tr>
+        </thead>
+
+        <tbody *ngFor="let item of getTodoItensRealizados();">
+          <tr *ngIf="item.prioridade=='Baixa' || 'Alta' || 'Média'">
+              <td style="text-decoration:line-through;"> {{ item.action }} </td>
+              <td><input type="checkbox" [(ngModel)]="item.done" /></td>
+          </tr>
+        </tbody>
+      </table>
+
+  <br><br>
+
+
+</div>
